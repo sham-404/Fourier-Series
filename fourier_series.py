@@ -12,9 +12,10 @@ def main():
 
     def update():
         nonlocal rad
-        rad += 0.0003
+        rad += 0.0006
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    transparent_screen = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
     running = True
     frame_count = 0
     clock = pygame.time.Clock()
@@ -24,29 +25,38 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+        transparent_screen.fill((0, 0, 0, 0))
         screen.fill((10, 10, 10))
 
         center = (200, HEIGHT // 2)
-        radius = 100
-        pygame.draw.aacircle(screen, (70, 70, 70), center, radius, 1)
-        pygame.draw.aacircle(screen, (225, 225, 225), center, 2)
+        x = center[0]
+        y = center[1]
+        for n in range(1, 20, 2):
+            radius = 70 * 4 / (n * math.pi)
+            prev_x = x
+            prev_y = y
 
-        x = center[0] + radius * math.sin(math.degrees(rad))
-        y = center[1] + radius * math.cos(math.degrees(rad))
+            x += radius * math.cos(n * math.degrees(rad))
+            y += radius * math.sin(n * math.degrees(rad))
+
+            # Code to draw the circles and the lines within the circles
+            pygame.draw.aaline(screen, (255, 255, 255), (prev_x, prev_y), (x, y), 1)
+            pygame.draw.aacircle(transparent_screen, (70, 70, 70, 90), (prev_x, prev_y), radius, 2)
+
+        update()
+
+        # Code that creates the wave pattern
         y_arr.insert(0, y)
-
-        pygame.draw.aacircle(screen, (225, 225, 225), (x, y), 3)
-        pygame.draw.aaline(screen, (100, 100, 100), center, (x, y), 1)
-
         points = [(i, y) for i, y in enumerate(y_arr, 450)]
         if len(points) > 1:
             pygame.draw.aalines(screen, (0, 200, 0), False, points)
             pygame.draw.aaline(screen, (100, 100, 200), (x, y), points[0])
         if len(y_arr) > 400:
-           y_arr.pop()
+            y_arr.pop()
 
-        update()
 
+
+        screen.blit(transparent_screen, (0, 0))
         pygame.display.flip()
         clock.tick(FPS)
         frame_count += 1
