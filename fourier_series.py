@@ -1,5 +1,5 @@
 import pygame
-import math 
+import math
 
 WIDTH = 800
 HEIGHT = 350
@@ -41,7 +41,7 @@ def main():
 
             # Code to draw the circles and the lines within the circles
             pygame.draw.aaline(screen, (255, 255, 255), (prev_x, prev_y), (x, y), 1)
-            pygame.draw.aacircle(transparent_screen, (70, 70, 70, 90), (prev_x, prev_y), radius, 2)
+            pygame.draw.aacircle(transparent_screen, (70, 70, 70, 55), (prev_x, prev_y), radius, 2)
 
         update()
 
@@ -63,4 +63,5 @@ def main():
 
     pygame.quit()
 
-main()
+if __name__ == "__main__":
+    main()
